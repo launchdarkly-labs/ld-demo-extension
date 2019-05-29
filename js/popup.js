@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log("default = " + storage.default);
     document.getElementById('default').checked = storage.default;
+
+    console.log("customId = " + storage.customId);
+    document.getElementById('customId').value = storage.customId;    
   });
   function saveSettings() {
     var cid = document.getElementById('id').value;
@@ -31,5 +34,9 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.storage.local.set({'default': defaultShow}, function() {
       console.log("Settings saved. default = " + defaultShow);
     });    
+    var customId = document.getElementById('customId').value;
+    chrome.storage.local.set({'customId': customId}, function() {
+      console.log("Settings saved. customId = " + customId);
+    });  
   }
 }, false);

@@ -4,14 +4,18 @@ $(document).ready(function() {
     chrome.storage.local.get(null,function(storage) {
         console.debug("script successfully injected, enabled = " + storage.enabled);
         if (storage.enabled == true) {
+            if (typeof storage.customId == 'undefined' || storage.customId == '')
+                var blockId = "ld-block";
+            else    
+                var blockId = storage.customId;
+            console.debug("LD BlockID = " + blockId);
             var user = {
                 "key": storage.userKey
             };
             var ldclient = LDClient.initialize(storage.clientId, user);
             ldclient.on('change', function() {
-                console.log("LD Ready");
                 var showFeature = ldclient.variation("show-block", false);
-                var block = document.getElementById("ld-block");
+                var block = document.getElementById(blockId);
                 if (showFeature) {
                     console.debug("LD Show feature");
                     block.style.display = "block";
@@ -28,9 +32,14 @@ $(document).ready(function() {
     });        
 });
 
+// Run this code when the page loads
 chrome.storage.local.get(null,function(e) {
-    if (e.enabled == true) {
-        console.log("LD User Enabled = True");
+    if (typeof storage.customId == 'undefined' || storage.customId == '')
+        var blockId = "ld-block";
+    else    
+        var blockId = storage.customId;
+    if (e.enabled == true && blockId == "ld-block") {
+        console.debug("LD User Enabled = True");
         var body = document.getElementsByTagName('body')[0];
         body.insertAdjacentHTML('afterbegin', `
         <div id="ld-block" style="cursor: pointer; display: block;float: right; z-index: 3;position: absolute; right:25%; top:25%;">
@@ -43,13 +52,13 @@ chrome.storage.local.get(null,function(e) {
         </div>
         `);
     }
-    var defBlock = document.getElementById("ld-block");
+    var defBlock = document.getElementById(blockId);
     if (e.default == true) {
-        console.log("LD Show Block by default");
+        console.debug("LD Show Block by default");
         defBlock.style.display = "block";
     }
     else {
-        console.log("LD Hide Block by default");
+        console.debug("LD Hide Block by default");
         defBlock.style.display = "none";
     }
 });
