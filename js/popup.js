@@ -16,6 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log("customId = " + storage.customId);
     document.getElementById('customId').value = storage.customId;    
+   
+    console.log("classEnabled = " + storage.classEnabled);
+    document.getElementById('classEnabled').checked = storage.classEnabled;  
   });
   function saveSettings() {
     var cid = document.getElementById('id').value;
@@ -38,5 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.storage.local.set({'customId': customId}, function() {
       console.log("Settings saved. customId = " + customId);
     });  
+    var classEnabled = document.getElementById('classEnabled').checked;
+    chrome.storage.local.set({'classEnabled': classEnabled}, function() {
+      console.log("Settings saved. classEnabled = " + classEnabled);
+    });    
   }
 }, false);

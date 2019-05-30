@@ -18,10 +18,20 @@ $(document).ready(function() {
                 var block = document.getElementById(blockId);
                 if (showFeature) {
                     console.debug("LD Show feature. blockId = " + blockId);
-                    block.style.display = "block";
+                    if (storage.classEnabled == true){
+                        $("."+blockId).show();
+                    }
+                    else {
+                        block.style.display = "block";
+                    }
                 } else {
                     console.debug("LD Hide feature. blockId = " + blockId);
-                    block.style.display = "none";
+                    if (storage.classEnabled == true) {
+                        $("."+blockId).hide();
+                    }
+                    else {
+                        block.style.display = "none";
+                    }
                 }
             });
         }
@@ -57,10 +67,20 @@ chrome.storage.local.get(null,function(e) {
     var defBlock = document.getElementById(blockId);
     if (e.default == true) {
         console.debug("LD Show Block by default. blockId = " + blockId);
-        defBlock.style.display = "block";
+        if (e.classEnabled == true){
+            $("."+blockId).show();
+        }
+        else {
+            block.style.display = "block";
+        }
     }
     else {
         console.debug("LD Hide Block by default. blockId = " + blockId);
-        defBlock.style.display = "none";
+        if (e.classEnabled == true) {
+            $("."+blockId).hide();
+        }
+        else {
+            block.style.display = "none";
+        }
     }
 });
