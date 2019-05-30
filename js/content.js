@@ -4,7 +4,7 @@ $(document).ready(function() {
     chrome.storage.local.get(null,function(storage) {
         console.debug("script successfully injected, enabled = " + storage.enabled);
         if (storage.enabled == true) {
-            if (typeof storage.customId == 'undefined' || storage.customId == '')
+            if (typeof storage.customId == 'undefined' || storage.customId == '' || storage.customId == null)
                 var blockId = "ld-block";
             else    
                 var blockId = storage.customId;
@@ -17,10 +17,10 @@ $(document).ready(function() {
                 var showFeature = ldclient.variation("show-block", false);
                 var block = document.getElementById(blockId);
                 if (showFeature) {
-                    console.debug("LD Show feature");
+                    console.debug("LD Show feature. blockId = " + blockId);
                     block.style.display = "block";
                 } else {
-                    console.debug("LD Hide feature");
+                    console.debug("LD Hide feature. blockId = " + blockId);
                     block.style.display = "none";
                 }
             });
@@ -31,15 +31,17 @@ $(document).ready(function() {
         }
     });        
 });
-
 // Run this code when the page loads
 chrome.storage.local.get(null,function(e) {
-    if (typeof storage.customId == 'undefined' || storage.customId == '')
-        var blockId = "ld-block";
-    else    
-        var blockId = storage.customId;
+    var blockId = "ld-block";
+    if (typeof e.customId == 'undefined' || e.customId == '' || e.customId == null) {
+        blockId = "ld-block";
+    }
+    else {   
+        blockId = e.customId;
+    }  
     if (e.enabled == true && blockId == "ld-block") {
-        console.debug("LD User Enabled = True");
+        console.debug("LD User Enabled = True.");
         var body = document.getElementsByTagName('body')[0];
         body.insertAdjacentHTML('afterbegin', `
         <div id="ld-block" style="cursor: pointer; display: block;float: right; z-index: 3;position: absolute; right:25%; top:25%;">
@@ -54,11 +56,11 @@ chrome.storage.local.get(null,function(e) {
     }
     var defBlock = document.getElementById(blockId);
     if (e.default == true) {
-        console.debug("LD Show Block by default");
+        console.debug("LD Show Block by default. blockId = " + blockId);
         defBlock.style.display = "block";
     }
     else {
-        console.debug("LD Hide Block by default");
+        console.debug("LD Hide Block by default. blockId = " + blockId);
         defBlock.style.display = "none";
     }
 });
