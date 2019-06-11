@@ -50,37 +50,39 @@ chrome.storage.local.get(null,function(e) {
     else {   
         blockId = e.customId;
     }  
-    if (e.enabled == true && blockId == "ld-block") {
+    if (e.enabled == true) {
         console.debug("LD User Enabled = True.");
-        var body = document.getElementsByTagName('body')[0];
-        body.insertAdjacentHTML('afterbegin', `
-        <div id="ld-block" style="cursor: pointer; display: block;float: right; z-index: 3;position: absolute; right:25%; top:25%;">
-        <center>
-        <table border="2" cellspacing="0" cellpadding="0" bgcolor="#b19cd9" width="800" style="text-align:center; height: 200px; background-color:#b19cd9;">
-        <tr><td style="background-color:#b19cd9;">
-        <h1>Make this hide with a Feature Flag!</h1>
-        </td></tr></table>
-        </center>
-        </div>
-        `);
-    }
-    var defBlock = document.getElementById(blockId);
-    if (e.default == true) {
-        console.debug("LD Show Block by default. blockId = " + blockId);
-        if (e.classEnabled == true){
-            $("."+blockId).show();
+        if (blockId == "ld-block") {
+            var body = document.getElementsByTagName('body')[0];
+            body.insertAdjacentHTML('afterbegin', `
+            <div id="ld-block" style="cursor: pointer; display: block;float: right; z-index: 3;position: absolute; right:25%; top:25%;">
+            <center>
+            <table border="2" cellspacing="0" cellpadding="0" bgcolor="#b19cd9" width="800" style="text-align:center; height: 200px; background-color:#b19cd9;">
+            <tr><td style="background-color:#b19cd9;">
+            <h1>Make this hide with a Feature Flag!</h1>
+            </td></tr></table>
+            </center>
+            </div>
+            `);
+        }
+        var defBlock = document.getElementById(blockId);
+        if (e.default == true) {
+            console.debug("LD Show Block by default. blockId = " + blockId);
+            if (e.classEnabled == true){
+                $("."+blockId).show();
+            }
+            else {
+                defBlock.style.display = "block";
+            }
         }
         else {
-            block.style.display = "block";
-        }
-    }
-    else {
-        console.debug("LD Hide Block by default. blockId = " + blockId);
-        if (e.classEnabled == true) {
-            $("."+blockId).hide();
-        }
-        else {
-            block.style.display = "none";
+            console.debug("LD Hide Block by default. blockId = " + blockId);
+            if (e.classEnabled == true) {
+                $("."+blockId).hide();
+            }
+            else {
+                defBlock.style.display = "none";
+            }
         }
     }
 });
