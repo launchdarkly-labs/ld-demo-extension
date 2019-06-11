@@ -44,7 +44,7 @@ $(document).ready(function() {
 // Run this code when the page loads
 chrome.storage.local.get(null,function(e) {
     var blockId = "ld-block";
-    if (typeof e.customId == 'undefined' || e.customId == '' || e.customId == null) {
+    if (e.customId == 'undefined' || e.customId == '' || e.customId == null) {
         blockId = "ld-block";
     }
     else {   
