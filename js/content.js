@@ -43,6 +43,12 @@ $(document).ready(function() {
 });
 // Run this code when the page loads
 chrome.storage.local.get(null,function(e) {
+    // First check to see if we need to hide debugger
+    if (e.debuggerHide == true)
+    {
+        console.debug("LD: Hide Debugger.");
+        $('a[href*="debugger"]').hide();
+    }
     var blockId = "ld-block";
     if (e.customId == 'undefined' || e.customId == '' || e.customId == null) {
         blockId = "ld-block";

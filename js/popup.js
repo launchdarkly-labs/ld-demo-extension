@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
    
     console.log("classEnabled = " + storage.classEnabled);
     document.getElementById('classEnabled').checked = storage.classEnabled;  
+
+    console.log("debuggerHide = " + storage.debuggerHide);
+    document.getElementById('debuggerHide').checked = storage.debuggerHide;  
   });
   function saveSettings() {
     var cid = document.getElementById('id').value;
@@ -44,6 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var classEnabled = document.getElementById('classEnabled').checked;
     chrome.storage.local.set({'classEnabled': classEnabled}, function() {
       console.log("Settings saved. classEnabled = " + classEnabled);
+    });   
+    var debuggerHide = document.getElementById('debuggerHide').checked;
+    chrome.storage.local.set({'debuggerHide': debuggerHide}, function() {
+      console.log("Settings saved. debugger = " + debuggerHide);
     });    
   }
 }, false);
