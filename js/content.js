@@ -29,7 +29,7 @@ $(document).ready(function() {
                 {
                     var rand = Math.random() * 100;
                     console.debug("LD Experiment Enabled. Rand = " + rand);
-                    console.debug(" Var = " + showFeature + " winVar = " + storage.winVar)
+                    console.debug("LD Var = " + showFeature + " winVar = " + storage.winVar)
                     var winVar = "default";
                     // Annoying that this is required, need to assign true for boolean flag
                     if (storage.winVar == "true") {

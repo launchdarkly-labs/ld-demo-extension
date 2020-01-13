@@ -56,8 +56,12 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.storage.local.set({'userKey': userKey}, function() {
       console.log("Settings saved. userKey = " + userKey);
     });
-    var userKey = document.getElementById('enabled').checked;
-    chrome.storage.local.set({'enabled': userKey}, function() {
+    var flagKey = document.getElementById('flagKey').value;
+    chrome.storage.local.set({'flagKey': flagKey}, function() {
+      console.log("Settings saved. flagKey = " + flagKey);
+    });
+    var enabled = document.getElementById('enabled').checked;
+    chrome.storage.local.set({'enabled': enabled}, function() {
       console.log("Settings saved. enabled = " + enabled);
     });
     var defaultShow = document.getElementById('default').checked;
