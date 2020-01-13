@@ -18,12 +18,33 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('customId').value = storage.customId;    
    
     console.log("classEnabled = " + storage.classEnabled);
-    document.getElementById('classEnabled').checked = storage.classEnabled;  
+    document.getElementById('classEnabled').checked = storage.classEnabled; 
 
+    // Experimentation Options
+    console.log("expEnabled = " + storage.expEnabled);
+    document.getElementById('expEnabled').checked = storage.expEnabled; 
+
+    console.log("metricName = " + storage.metricName);
+    document.getElementById('metricName').value = storage.metricName;
+
+    console.log("winVar = " + storage.winVar);
+    document.getElementById('winVar').value = storage.winVar;
+
+    console.log("winConversion = " + storage.winConversion);
+    document.getElementById('winConversion').value = storage.winConversion;
+
+    console.log("loseConversion = " + storage.loseConversion);
+    document.getElementById('loseConversion').value = storage.loseConversion;
+
+    console.log("refresh = " + storage.refresh);
+    document.getElementById('refresh').value = storage.refresh;
+
+    // Misc Options
     console.log("debuggerHide = " + storage.debuggerHide);
     document.getElementById('debuggerHide').checked = storage.debuggerHide;  
   });
   function saveSettings() {
+    // Demo Options
     var cid = document.getElementById('id').value;
     chrome.storage.local.set({'clientId': cid}, function() {
       console.log("Settings saved. ClientId = " + cid);
@@ -48,6 +69,32 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.storage.local.set({'classEnabled': classEnabled}, function() {
       console.log("Settings saved. classEnabled = " + classEnabled);
     });   
+    // Experimentation Options
+    var expEnabled = document.getElementById('expEnabled').checked;
+    chrome.storage.local.set({'expEnabled': expEnabled}, function() {
+      console.log("Settings saved. expEnabled = " + expEnabled);
+    }); 
+    var metricName = document.getElementById('metricName').value;
+    chrome.storage.local.set({'metricName': metricName}, function() {
+      console.log("Settings saved. metricName = " + metricName);
+    });  
+    var winVar = document.getElementById('winVar').value;
+    chrome.storage.local.set({'winVar': winVar}, function() {
+      console.log("Settings saved. winVar = " + winVar);
+    });
+    var winConversion = document.getElementById('winConversion').value;
+    chrome.storage.local.set({'winConversion': winConversion}, function() {
+      console.log("Settings saved. winConversion = " + winConversion);
+    });
+    var loseConversion = document.getElementById('loseConversion').value;
+    chrome.storage.local.set({'loseConversion': loseConversion}, function() {
+      console.log("Settings saved. loseConversion = " + loseConversion);
+    });
+    var refresh = document.getElementById('refresh').value;
+    chrome.storage.local.set({'refresh': refresh}, function() {
+      console.log("Settings saved. refresh = " + refresh);
+    });
+    // Misc Options
     var debuggerHide = document.getElementById('debuggerHide').checked;
     chrome.storage.local.set({'debuggerHide': debuggerHide}, function() {
       console.log("Settings saved. debugger = " + debuggerHide);

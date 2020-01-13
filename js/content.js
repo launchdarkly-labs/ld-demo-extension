@@ -1,4 +1,9 @@
 console.log("Start of injected LD script");
+var randomKey = Math.random() * 10000000000000000;
+var randUser = {
+    "key": randomKey
+};
+
 $(document).ready(function() { 
     // Get variables from storage
     chrome.storage.local.get(null,function(storage) {
@@ -12,7 +17,42 @@ $(document).ready(function() {
             var user = {
                 "key": storage.userKey
             };
-            var ldclient = LDClient.initialize(storage.clientId, user);
+            if (storage.expEnabled == true) {
+                var ldclient = LDClient.initialize(storage.clientId, randUser);
+            }
+            else {
+                var ldclient = LDClient.initialize(storage.clientId, user);
+            }
+            ldclient.on('ready', function() {
+                var showFeature = ldclient.variation("show-block", false);
+                if (storage.expEnabled == true)
+                {
+                    var rand = Math.random() * 100;
+                    console.debug("LD Experiment Enabled. Rand = " + rand);
+                    console.debug(" Var = " + showFeature + " winVar = " + storage.winVar)
+                    var winVar = "default";
+                    // Annoying that this is required, need to assign true for boolean flag
+                    if (storage.winVar == "true") {
+                        winVar = true;
+                    }  
+                    else if (storage.winVar == "false") {
+                        winVar = false;
+                    }
+                    else {
+                        winVar = storage.winVar;
+                    }
+                    if (showFeature == winVar && rand <= storage.winConversion)
+                    {
+                        console.debug("LD Winning Variation and Conversion");    
+                        ldclient.track(storage.metricName);
+                    }
+                    else if (rand <= storage.loseConversion)
+                    {
+                        console.debug("LD Losing Variation and Conversion");
+                        ldclient.track(storage.metricName);
+                    }
+                }
+            });
             ldclient.on('change', function() {
                 var showFeature = ldclient.variation("show-block", false);
                 var block = document.getElementById(blockId);
@@ -57,6 +97,14 @@ chrome.storage.local.get(null,function(e) {
         blockId = e.customId;
     }  
     if (e.enabled == true) {
+        if (e.expEnabled && e.refresh > 0)
+        {  
+            console.debug("LD Refresh Timer Set: " + e.refresh + " seconds");
+            window.setTimeout(reloadTimer, e.refresh * 1000);
+            function reloadTimer() {
+                location.reload();
+              }
+        }
         console.debug("LD User Enabled = True.");
         if (blockId == "ld-block") {
             var body = document.getElementsByTagName('body')[0];
