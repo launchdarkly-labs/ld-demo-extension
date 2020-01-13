@@ -83,6 +83,10 @@ $(document).ready(function() {
 });
 // Run this code when the page loads
 chrome.storage.local.get(null,function(e) {
+    // Load time captured for future metric gathering
+    var loadTime = window.performance.timing.domContentLoadedEventEnd- window.performance.timing.navigationStart;
+    console.debug("LD loadTime = " + loadTime)
+    
     // First check to see if we need to hide debugger
     if (e.debuggerHide == true)
     {
