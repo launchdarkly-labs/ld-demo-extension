@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
     console.debug("userKey = " + storage.userKey);
     document.getElementById('userKey').value = storage.userKey;
 
+    console.debug("flagKey = " + storage.flagKey);
+    document.getElementById('flagKey').value = storage.flagKey;
+
     console.debug("enabled = " + storage.enabled);
     document.getElementById('enabled').checked = storage.enabled;
 

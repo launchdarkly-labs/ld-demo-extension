@@ -24,7 +24,7 @@ $(document).ready(function() {
                 var ldclient = LDClient.initialize(storage.clientId, user);
             }
             ldclient.on('ready', function() {
-                var showFeature = ldclient.variation("show-block", false);
+                var showFeature = ldclient.variation(storage.flagKey, false);
                 if (storage.expEnabled == true)
                 {
                     var rand = Math.random() * 100;
@@ -54,7 +54,7 @@ $(document).ready(function() {
                 }
             });
             ldclient.on('change', function() {
-                var showFeature = ldclient.variation("show-block", false);
+                var showFeature = ldclient.variation(storage.flagKey, false);
                 var block = document.getElementById(blockId);
                 if (showFeature) {
                     console.debug("LD Show feature. blockId = " + blockId);
