@@ -4,14 +4,14 @@ var randUser = {
     "key": randomKey
 };
 
-$(document).ready(function() { 
+$(document).ready(function() {
     // Get variables from storage
     chrome.storage.local.get(null,function(storage) {
         console.debug("script successfully injected, enabled = " + storage.enabled);
         if (storage.enabled == true) {
             if (typeof storage.customId == 'undefined' || storage.customId == '' || storage.customId == null)
                 var blockId = "ld-block";
-            else    
+            else
                 var blockId = storage.customId;
             console.debug("LD BlockID = " + blockId);
             var user = {
@@ -34,7 +34,7 @@ $(document).ready(function() {
                     // Annoying that this is required, need to assign true for boolean flag
                     if (storage.winVar == "true") {
                         winVar = true;
-                    }  
+                    }
                     else if (storage.winVar == "false") {
                         winVar = false;
                     }
@@ -43,7 +43,7 @@ $(document).ready(function() {
                     }
                     if (showFeature == winVar && rand <= storage.winConversion)
                     {
-                        console.debug("LD Winning Variation and Conversion");    
+                        console.debug("LD Winning Variation and Conversion");
                         ldclient.track(storage.metricName);
                     }
                     else if (rand <= storage.loseConversion)
@@ -79,30 +79,31 @@ $(document).ready(function() {
             console.log("LD User Disabled");
             defBlock.style.display = "none";
         }
-    });        
+    });
 });
 // Run this code when the page loads
 chrome.storage.local.get(null,function(e) {
     // Load time captured for future metric gathering
     var loadTime = window.performance.timing.domContentLoadedEventEnd- window.performance.timing.navigationStart;
     console.debug("LD loadTime = " + loadTime)
-    
+
     // First check to see if we need to hide debugger
     if (e.debuggerHide == true)
     {
         console.debug("LD: Hide Debugger.");
         $('a[href*="debugger"]').hide();
+        $(".ThirdPartyWidgets").hide();
     }
     var blockId = "ld-block";
     if (e.customId == 'undefined' || e.customId == '' || e.customId == null) {
         blockId = "ld-block";
     }
-    else {   
+    else {
         blockId = e.customId;
-    }  
+    }
     if (e.enabled == true) {
         if (e.expEnabled && e.refresh > 0)
-        {  
+        {
             console.debug("LD Refresh Timer Set: " + e.refresh + " seconds");
             window.setTimeout(reloadTimer, e.refresh * 1000);
             function reloadTimer() {
