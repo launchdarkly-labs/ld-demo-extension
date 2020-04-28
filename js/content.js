@@ -4,6 +4,10 @@ var randUser = {
     "key": randomKey
 };
 
+// Load time captured for future metric gathering
+var loadTime = window.performance.timing.domContentLoadedEventEnd- window.performance.timing.navigationStart;
+console.debug("LD loadTime = " + loadTime)
+
 $(document).ready(function() { 
     // Get variables from storage
     chrome.storage.local.get(null,function(storage) {
@@ -24,6 +28,8 @@ $(document).ready(function() {
                 var ldclient = LDClient.initialize(storage.clientId, user);
             }
             ldclient.on('ready', function() {
+                ldclient.track("search-load-time", randUser, loadTime);
+                
                 var showFeature = ldclient.variation(storage.flagKey, false);
                 if (storage.expEnabled == true)
                 {
@@ -41,13 +47,11 @@ $(document).ready(function() {
                     else {
                         winVar = storage.winVar;
                     }
-                    if (showFeature == winVar && rand <= storage.winConversion)
-                    {
+                    if (showFeature == winVar && rand <= storage.winConversion) {
                         console.debug("LD Winning Variation and Conversion");    
                         ldclient.track(storage.metricName);
                     }
-                    else if (rand <= storage.loseConversion)
-                    {
+                    else if (rand <= storage.loseConversion) {
                         console.debug("LD Losing Variation and Conversion");
                         ldclient.track(storage.metricName);
                     }
@@ -81,12 +85,10 @@ $(document).ready(function() {
         }
     });        
 });
+
 // Run this code when the page loads
 chrome.storage.local.get(null,function(e) {
-    // Load time captured for future metric gathering
-    var loadTime = window.performance.timing.domContentLoadedEventEnd- window.performance.timing.navigationStart;
-    console.debug("LD loadTime = " + loadTime)
-    
+
     // First check to see if we need to hide debugger
     if (e.debuggerHide == true)
     {
@@ -123,6 +125,19 @@ chrome.storage.local.get(null,function(e) {
             </div>
             `);
         }
+
+        if (e.cssFlagKey != null || e.cssFlagKey != "") {
+            var ldextclient = LDClient.initialize(e.clientId, randUser); 
+            ldextclient.on('ready', function() {
+                var showFeature = ldextclient.variation(e.cssFlagKey, false);
+                if (showFeature) {
+                    var rule = '<style>body { font-family:Courier,monospace;letter-spacing:5px;word-wrap: break-word;background-color:black;padding:100px,10px,123px,1px;text-align:left;color:black;background-image:none;} div {position:static;border:10px solid;}</style>';
+                    var cssBody = document.getElementsByTagName('body')[0];
+                    cssBody.insertAdjacentHTML('beforeend', rule);
+                }
+            });
+        }
+
         var defBlock = document.getElementById(blockId);
         if (e.default == true) {
             console.debug("LD Show Block by default. blockId = " + blockId);

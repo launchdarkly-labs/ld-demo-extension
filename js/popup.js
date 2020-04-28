@@ -45,6 +45,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Misc Options
     console.log("debuggerHide = " + storage.debuggerHide);
     document.getElementById('debuggerHide').checked = storage.debuggerHide;  
+
+    console.log("cssFlagKey = " + storage.cssFlagKey);
+    document.getElementById('cssFlagKey').value = storage.cssFlagKey;    
   });
   function saveSettings() {
     // Demo Options
@@ -106,5 +109,9 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.storage.local.set({'debuggerHide': debuggerHide}, function() {
       console.log("Settings saved. debugger = " + debuggerHide);
     });    
+    var cssFlagKey = document.getElementById('cssFlagKey').value;
+    chrome.storage.local.set({'cssFlagKey': cssFlagKey}, function() {
+      console.log("Settings saved. cssFlagKey = " + cssFlagKey);
+    });
   }
 }, false);
