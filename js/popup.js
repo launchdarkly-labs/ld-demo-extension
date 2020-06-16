@@ -1,9 +1,30 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('save').addEventListener('click', saveSettings);
+
   // Retrieve extension user settings
-  chrome.storage.local.get(null,function(storage) {
-    console.debug("clientId = " + storage.clientId);
-    document.getElementById('id').value = storage.clientId;
+  chrome.storage.local.get(null, function (storage) {
+    let activeUrl = document.getElementById('activeUrl');
+    let activeState = document.getElementById('activeState');
+    if (storage.enabled) {
+      activeUrl.hidden = false;
+      activeUrl.innerText = storage.activeTab.url;
+
+      activeState.hidden = false;
+      if(storage.isActive) {
+        activeState.innerText = "ACTIVE";
+        activeState.style.color = "green";
+      } else {
+        activeState.innerText = "inactive";
+        activeState.style.color = "red";
+      }
+    } else {
+      activeUrl.hidden = true;
+      activeState.hidden = true;
+    }
+
+    clientId = storage.clientId || "Please set client ID";
+    console.debug("clientId = " + clientId);
+    document.getElementById('id').value = clientId;
 
     console.debug("userKey = " + storage.userKey);
     document.getElementById('userKey').value = storage.userKey;
@@ -18,14 +39,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('default').checked = storage.default;
 
     console.log("customId = " + storage.customId);
-    document.getElementById('customId').value = storage.customId;    
-   
+    document.getElementById('customId').value = storage.customId;
+
     console.log("classEnabled = " + storage.classEnabled);
-    document.getElementById('classEnabled').checked = storage.classEnabled; 
+    document.getElementById('classEnabled').checked = storage.classEnabled;
 
     // Experimentation Options
     console.log("expEnabled = " + storage.expEnabled);
-    document.getElementById('expEnabled').checked = storage.expEnabled; 
+    document.getElementById('expEnabled').checked = storage.expEnabled;
 
     console.log("metricName = " + storage.metricName);
     document.getElementById('metricName').value = storage.metricName;
@@ -44,73 +65,88 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Misc Options
     console.log("debuggerHide = " + storage.debuggerHide);
-    document.getElementById('debuggerHide').checked = storage.debuggerHide;  
+    document.getElementById('debuggerHide').checked = storage.debuggerHide;
 
     console.log("cssFlagKey = " + storage.cssFlagKey);
-    document.getElementById('cssFlagKey').value = storage.cssFlagKey;    
+    document.getElementById('cssFlagKey').value = storage.cssFlagKey;
   });
   function saveSettings() {
     // Demo Options
     var cid = document.getElementById('id').value;
-    chrome.storage.local.set({'clientId': cid}, function() {
+    chrome.storage.local.set({ 'clientId': cid }, function () {
       console.log("Settings saved. ClientId = " + cid);
     });
     var userKey = document.getElementById('userKey').value;
-    chrome.storage.local.set({'userKey': userKey}, function() {
+    chrome.storage.local.set({ 'userKey': userKey }, function () {
       console.log("Settings saved. userKey = " + userKey);
     });
     var flagKey = document.getElementById('flagKey').value;
-    chrome.storage.local.set({'flagKey': flagKey}, function() {
+    chrome.storage.local.set({ 'flagKey': flagKey }, function () {
       console.log("Settings saved. flagKey = " + flagKey);
     });
+
     var enabled = document.getElementById('enabled').checked;
-    chrome.storage.local.set({'enabled': enabled}, function() {
+    chrome.storage.local.set({ 'enabled': enabled }, function () {
       console.log("Settings saved. enabled = " + enabled);
+      if (enabled) {
+        chrome.storage.local.get('currentTabId', function (data) {
+          chrome.tabs.get(data.currentTabId, function (tab) {
+            chrome.storage.local.set({ activeTab: tab }, function () {
+              console.debug("Set activeTab to " + tab.url + ".");
+            })
+          });
+        });
+      } else {
+        chrome.storage.local.set({ activeTab: undefined }, function () {
+          console.debug("Unset activeTab.");
+        });
+      }
     });
+
     var defaultShow = document.getElementById('default').checked;
-    chrome.storage.local.set({'default': defaultShow}, function() {
+    chrome.storage.local.set({ 'default': defaultShow }, function () {
       console.log("Settings saved. default = " + defaultShow);
-    });    
+    });
     var customId = document.getElementById('customId').value;
-    chrome.storage.local.set({'customId': customId}, function() {
+    chrome.storage.local.set({ 'customId': customId }, function () {
       console.log("Settings saved. customId = " + customId);
-    });  
+    });
     var classEnabled = document.getElementById('classEnabled').checked;
-    chrome.storage.local.set({'classEnabled': classEnabled}, function() {
+    chrome.storage.local.set({ 'classEnabled': classEnabled }, function () {
       console.log("Settings saved. classEnabled = " + classEnabled);
-    });   
+    });
     // Experimentation Options
     var expEnabled = document.getElementById('expEnabled').checked;
-    chrome.storage.local.set({'expEnabled': expEnabled}, function() {
+    chrome.storage.local.set({ 'expEnabled': expEnabled }, function () {
       console.log("Settings saved. expEnabled = " + expEnabled);
-    }); 
+    });
     var metricName = document.getElementById('metricName').value;
-    chrome.storage.local.set({'metricName': metricName}, function() {
+    chrome.storage.local.set({ 'metricName': metricName }, function () {
       console.log("Settings saved. metricName = " + metricName);
-    });  
+    });
     var winVar = document.getElementById('winVar').value;
-    chrome.storage.local.set({'winVar': winVar}, function() {
+    chrome.storage.local.set({ 'winVar': winVar }, function () {
       console.log("Settings saved. winVar = " + winVar);
     });
     var winConversion = document.getElementById('winConversion').value;
-    chrome.storage.local.set({'winConversion': winConversion}, function() {
+    chrome.storage.local.set({ 'winConversion': winConversion }, function () {
       console.log("Settings saved. winConversion = " + winConversion);
     });
     var loseConversion = document.getElementById('loseConversion').value;
-    chrome.storage.local.set({'loseConversion': loseConversion}, function() {
+    chrome.storage.local.set({ 'loseConversion': loseConversion }, function () {
       console.log("Settings saved. loseConversion = " + loseConversion);
     });
     var refresh = document.getElementById('refresh').value;
-    chrome.storage.local.set({'refresh': refresh}, function() {
+    chrome.storage.local.set({ 'refresh': refresh }, function () {
       console.log("Settings saved. refresh = " + refresh);
     });
     // Misc Options
     var debuggerHide = document.getElementById('debuggerHide').checked;
-    chrome.storage.local.set({'debuggerHide': debuggerHide}, function() {
+    chrome.storage.local.set({ 'debuggerHide': debuggerHide }, function () {
       console.log("Settings saved. debugger = " + debuggerHide);
-    });    
+    });
     var cssFlagKey = document.getElementById('cssFlagKey').value;
-    chrome.storage.local.set({'cssFlagKey': cssFlagKey}, function() {
+    chrome.storage.local.set({ 'cssFlagKey': cssFlagKey }, function () {
       console.log("Settings saved. cssFlagKey = " + cssFlagKey);
     });
   }

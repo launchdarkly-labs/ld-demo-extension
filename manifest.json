@@ -4,11 +4,14 @@
     "name": "LaunchDarkly Demo Tool",
     "description": "This extension creates custom demo flows for LaunchDarkly",
     "version": "0.6",
-    "permissions": ["storage", "activeTab"],
+    "permissions": [
+      "storage",
+      "tabs"
+    ],
     "content_security_policy": "script-src 'self' https://app.launchdarkly.com; object-src 'self'",
     "background": {
         "page": "background.html",
-        "persistent": true
+        "persistent": false
     },
     "icons": {
         "16": "icons/logo16.png",

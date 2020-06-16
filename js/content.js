@@ -10,9 +10,9 @@ console.debug("LD loadTime = " + loadTime)
 
 $(document).ready(function() { 
     // Get variables from storage
-    chrome.storage.local.get(null,function(storage) {
+    chrome.storage.local.get(null, function(storage) {
         console.debug("script successfully injected, enabled = " + storage.enabled);
-        if (storage.enabled == true) {
+        if (storage.enabled == true && storage.isActive) {
             if (typeof storage.customId == 'undefined' || storage.customId == '' || storage.customId == null)
                 var blockId = "ld-block";
             else    
