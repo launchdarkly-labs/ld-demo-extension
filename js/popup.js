@@ -6,18 +6,22 @@ document.addEventListener('DOMContentLoaded', function () {
     let activeUrl = document.getElementById('activeUrl');
     let activeState = document.getElementById('activeState');
     if (storage.enabled) {
+      console.debug("Plugin enabled; showing active state and URL.");
       activeUrl.hidden = false;
       activeUrl.innerText = storage.activeTab.url;
 
       activeState.hidden = false;
-      if(storage.isActive) {
+      if (storage.isActive) {
+        console.debug("Plugin active; showing active state in green.");
         activeState.innerText = "ACTIVE";
         activeState.style.color = "green";
       } else {
+        console.debug("Plugin inactive; showing inactive state in red.");
         activeState.innerText = "inactive";
         activeState.style.color = "red";
       }
     } else {
+      console.debug("Plugin disabled; hiding active state and URL.");
       activeUrl.hidden = true;
       activeState.hidden = true;
     }
@@ -70,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("cssFlagKey = " + storage.cssFlagKey);
     document.getElementById('cssFlagKey').value = storage.cssFlagKey;
   });
+
   function saveSettings() {
     // Demo Options
     var cid = document.getElementById('id').value;
@@ -149,5 +154,13 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.storage.local.set({ 'cssFlagKey': cssFlagKey }, function () {
       console.log("Settings saved. cssFlagKey = " + cssFlagKey);
     });
+
+    if (enabled) {
+      chrome.tabs.getSelected(null, function (tab) {
+        chrome.tabs.update(tab.id, { url: tab.url }, function () {
+          chrome.storage.local.set({ isActive: true });
+        });
+      });
+    }
   }
 }, false);
