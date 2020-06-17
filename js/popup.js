@@ -158,7 +158,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (enabled) {
       chrome.tabs.getSelected(null, function (tab) {
         chrome.tabs.update(tab.id, { url: tab.url }, function () {
-          chrome.storage.local.set({ isActive: true });
+          chrome.storage.local.set({ 
+            isActive: true,
+            currentTabId: tab.tabId,
+            activeTab: tab
+          });
         });
       });
     }
